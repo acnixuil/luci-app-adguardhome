@@ -37,7 +37,7 @@ jobs:
 
   cleaning:
     if: ${{ always() }}
-    needs: [sync_and_modify]
+    needs: [sync_and_update]
     runs-on: ubuntu-latest
     steps:
     - name: Delete workflow runs
