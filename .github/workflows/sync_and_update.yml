@@ -29,8 +29,8 @@ jobs:
 
     - name: Commit and push changes
       run: |
-        git config user.name "${{ secrets.GIT_USER_NAME }}"
-        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git config --local user.name "${{ secrets.GIT_USER_NAME }}"
+        git config --local user.email "${{ secrets.GIT_USER_EMAIL }}"
         git add .
         git commit -m "Update zh_Hans symlink"
         git push
