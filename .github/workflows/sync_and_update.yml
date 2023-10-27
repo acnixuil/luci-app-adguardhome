@@ -1,0 +1,47 @@
+name: Weekly Sync and Update
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron: '0 0 * * 5'  # 每周五（UTC 时间）
+
+jobs:
+  sync_and_update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v4
+
+    - name: Sync with upstream repository
+      run: |
+        git remote add upstream https://github.com/kongfl888/luci-app-adguardhome.git
+        git fetch upstream
+        git merge upstream/main
+
+    - name: Remove zh_Hans file and create symlink
+      run: |
+        cd luci-app-adguardhome/po
+        rm zh_Hans
+        ln -s zh-cn zh_Hans
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "${{ secrets.GIT_USER_NAME }}"
+        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git add .
+        git commit -m "Update zh_Hans symlink"
+        git push
+      env:
+        ITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
+
+  cleaning:
+    if: ${{ always() }}
+    needs: [sync_and_modify]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete workflow runs
+      uses: Jejz168/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 1
