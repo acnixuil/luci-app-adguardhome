@@ -17,9 +17,7 @@ jobs:
       run: |
         git remote add upstream https://github.com/kongfl888/luci-app-adguardhome.git
         git fetch upstream
-
-    - name: Merge Upstream Changes
-      run: git merge --allow-unrelated-histories --strategy-option=theirs upstream/master
+        git merge upstream/main
 
     - name: Remove zh_Hans file and create symlink
       run: |
